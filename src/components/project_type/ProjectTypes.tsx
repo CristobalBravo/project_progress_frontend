@@ -2,72 +2,26 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import { API_URL } from "../../constants";
+import {
+  deleteProjectType,
+  getAllProjectType,
+  saveProjectType,
+  updateProjectType,
+} from "../../services/ProjectTypeService";
 import toast from "react-hot-toast";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import ConfirmationModal from "../Shared/ConfirmationModal";
 import ProjectTypeModal from "./ProjectTypeModal";
-
-const fetchData = async () => {
-  const response = await fetch(`${API_URL}/project-type`);
-  return response.json();
-};
-
-const deleteProjectType = async (projectTypeID: number) => {
-  const response = await fetch(`${API_URL}/project-type/${projectTypeID}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  if (!response.ok) {
-    const { message } = await response.json();
-    throw new Error(message);
-  }
-
-  return response.json();
-};
-
-const saveProjectType = async (projectType: any) => {
-  const response = await fetch(`${API_URL}/project-type`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(projectType),
-  });
-
-  if (!response.ok) {
-    const { message } = await response.json();
-    throw new Error(message);
-  }
-
-  return response.json();
-};
-
-const updateProjectType = async (projectType: any) => {
-  const response = await fetch(`${API_URL}/project-type/${projectType.pt_id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(projectType),
-  });
-  if (!response.ok) {
-    const { message } = await response.json();
-    throw new Error(message);
-  }
-
-  return response.json();
-};
+import { FaRegTrashCan, FaPencil } from "react-icons/fa6";
+import { styleButtonRight } from "../../utils/GlobalStyle";
+import { Col, Row } from "react-bootstrap";
 
 function ProjectTypes() {
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["project-types"],
-    queryFn: fetchData,
+    queryFn: getAllProjectType,
   });
 
   const [notificationShown, setNotificationShown] = useState(false);
@@ -103,11 +57,6 @@ function ProjectTypes() {
   }
 
   const { projectTypes } = data;
-
-  const styleButtonRight = {
-    display: "flex",
-    justifyContent: "flex-end",
-  };
 
   const handleShowModal = (projectType) => {
     const { pt_name, id } = projectType;
@@ -161,18 +110,21 @@ function ProjectTypes() {
   return (
     <>
       <Container>
-        <div>
-          <h1>Tipos de Proyectos</h1>
-        </div>
-        <br />
-        <div style={styleButtonRight}>
-          <Button
-            variant="primary"
-            onClick={() => handleShowModalTypeProject(null)}
-          >
-            Crear Tipo de Proyecto
-          </Button>
-        </div>
+      <Row>
+          <Col>
+            <h1>Tipos de Proyectos</h1>
+          </Col>
+          <Col>
+            <div style={styleButtonRight}>
+              <Button
+                variant="primary"
+                onClick={() => handleShowModalTypeProject()}
+              >
+                Crear Estado de Proyecto
+              </Button>
+            </div>
+          </Col>
+        </Row>
         <br />
         <Table responsive="lg">
           <thead>
@@ -182,7 +134,7 @@ function ProjectTypes() {
             </tr>
           </thead>
           <tbody>
-            {projectTypes.map((projectType: any) => (
+            {projectTypes.map((projectType) => (
               <tr key={projectType.id}>
                 <td>{projectType.pt_name}</td>
                 <td>
@@ -190,13 +142,13 @@ function ProjectTypes() {
                     variant="warning"
                     onClick={() => handleShowModalTypeProject(projectType)}
                   >
-                    Editar
+                    <FaPencil />
                   </Button>
                   <Button
                     variant="danger"
                     onClick={() => handleShowModal(projectType)}
                   >
-                    Eliminar
+                    <FaRegTrashCan />
                   </Button>
                 </td>
               </tr>
