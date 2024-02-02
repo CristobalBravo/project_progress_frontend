@@ -13,7 +13,7 @@ function NavBar(){
                     <Link href='/home' className='nav-link'>INICIO</Link>
                     <Link href='/projects' className='nav-link'>PROYECTOS</Link>
                     <Link href='/projects-types' className='nav-link'>TIPOS DE PROYECTOS</Link>
-                    <Link href='/state-project' className='nav-link'>ESTADOS DE PROYECTOS</Link>
+                    <Link href='/projects-states' className='nav-link'>ESTADOS DE PROYECTOS</Link>
                     <Link href='/members' className='nav-link'>PARTICIPANTES</Link>
                     <Link href='/type-members' className='nav-link'>PROFESIÓN</Link>
                 </Nav>
